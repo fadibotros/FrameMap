@@ -11,9 +11,41 @@ from random import randint
 import time
 from datetime import datetime
 import base64
+import matplotlib.image as img
+from PIL import Image
 
 class Handler(BaseHTTPRequestHandler):
 
+	def red_dot (self, x, y):
+    image = img.imread('./originalMap.png')
+
+    if(x > 399 or x < 0 or y > 399 or y <0):
+        print('x and y have to be between 0 et 399')
+        return
+    else:
+        for i in range(3):
+            for j in range (3):
+                if(i+x < 400):
+                    if(y+j < 400):
+                        image[i+x,y+j,0]=1
+                        image[i+x,y+j,1]=0
+                        image[i+x,y+j,2]=0
+                    if(y-j > -1):
+                        image[i+x,y-j,0]=1
+                        image[i+x,y-j,1]=0
+                        image[i+x,y-j,2]=0
+                
+                if(x-i > -1):
+                    if(y+j < 400):
+                        image[x-i,y+j,0]=1
+                        image[x-i,y+j,1]=0
+                        image[x-i,y+j,2]=0
+                    if(y-j > -1):
+                        image[x-i,y-j,0]=1
+                        image[x-i,y-j,1]=0
+                        image[x-i,y-j,2]=0
+        img = Image.fromarray(image, 'RGB')
+        img.save('outputMap.jpg')
 
 	def do_POST(self):
 		self.send_response(200)
@@ -29,7 +61,9 @@ class Handler(BaseHTTPRequestHandler):
 		g.write(base64.decodestring(requestJson["image"]))
 		g.close()
 
-		with open("out2.jpg", "rb") as image_file:
+		self.red_dot(295,105)
+
+		with open("outputMap.jpg", "rb") as image_file:
 			encoded_image = base64.b64encode(image_file.read())
 
 		# responseJSON = {"image": encoded_image}
