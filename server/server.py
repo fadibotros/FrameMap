@@ -11,7 +11,10 @@ from random import randint
 import time
 from datetime import datetime
 import base64
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.image as img
+from matplotlib import pyplot as plt
 from PIL import Image
 
 class Handler(BaseHTTPRequestHandler):
@@ -44,8 +47,11 @@ class Handler(BaseHTTPRequestHandler):
 							image[x-i,y-j,0]=1
 							image[x-i,y-j,1]=0
 							image[x-i,y-j,2]=0
-			img = Image.fromarray(image, 'RGB')
-			img.save('outputMap.jpg')
+			
+			plt.imshow(image, interpolation='nearest')
+			plt.savefig('outputMap.jpg')
+			#img2 = Image.fromarray(image, 'RGB')
+			#img2.save('outputMap.png')
 
 	def do_POST(self):
 		self.send_response(200)
