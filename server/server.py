@@ -29,8 +29,12 @@ class Handler(BaseHTTPRequestHandler):
 		g.write(base64.decodestring(requestJson["image"]))
 		g.close()
 
-		responseJSON = {"sysResponse": "hello"}
-		responseStr = json.dumps(responseJSON)
+		with open("out2.jpg", "rb") as image_file:
+			encoded_image = base64.b64encode(image_file.read())
+
+		# responseJSON = {"image": encoded_image}
+		# responseStr = json.dumps(responseJSON)
+		responseStr = encoded_image
 
 		self.wfile.write(responseStr)
 		# self.wfile.write('\n')
