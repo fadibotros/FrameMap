@@ -20,14 +20,14 @@ class Handler(BaseHTTPRequestHandler):
 		self.send_header('Access-Control-Allow-Origin', '*')
 		self.send_header('Content-Type', 'application/json')
 		self.end_headers()
-
+		#print self.rfile.read(int(self.headers['Content-Length']))
 		requestJson = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
 		print "Recieved message: "
-		print requestJson
+		#print requestJson
 
-		# g = open("out.png", "w")
-		# g.write(base64.decodestring(requestJson["image"]))
-		# g.close()
+		g = open("out.jpg", "w")
+		g.write(base64.decodestring(requestJson["image"]))
+		g.close()
 
 		responseJSON = {"sysResponse": "hello"}
 		responseStr = json.dumps(responseJSON)
@@ -42,6 +42,6 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 if __name__ == '__main__':
 
-	server = ThreadedHTTPServer(('', 8080), Handler)
+	server = ThreadedHTTPServer(('', 8081), Handler)
 	print 'Starting server, use <Ctrl-C> to stop'
 	server.serve_forever()
